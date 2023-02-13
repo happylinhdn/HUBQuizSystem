@@ -1,7 +1,7 @@
 import imp
 from django.contrib import admin
 from .models import TableClass, TableStudent, TableChapter, TableLevel, TableAnswer
-from .models import TableQuestion, TableExamStructure, TableExam, TableAssign
+from .models import TableQuestion, TableExamStructure, TableExam, TableAssign, TableHelloThai
 # Register your models here.
 class TableClassAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -28,3 +28,4 @@ admin.site.register(TableQuestion, TableQuestionAdmin)
 admin.site.register(TableExamStructure)
 admin.site.register(TableExam)
 admin.site.register(TableAssign)
+admin.site.register(TableHelloThai)

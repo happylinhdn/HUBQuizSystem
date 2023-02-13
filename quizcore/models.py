@@ -55,3 +55,8 @@ class TableAssign(models.Model):
     student = models.ForeignKey(TableStudent, on_delete=models.CASCADE, related_name='students')
     status = models.CharField(max_length=10) # todo: let check what is status field ?
     current_answers = models.ManyToManyField(TableAnswer)
+
+class TableHelloThai(models.Model):
+    note = models.CharField(max_length=20)
+    def __str__(self):
+        return self.note
