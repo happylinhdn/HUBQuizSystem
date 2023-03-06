@@ -1,12 +1,7 @@
 from django.contrib import admin
-from .models import TableClass, Student, TableChapter, TableLevel, TableAnswer
-from .models import TableQuestion, TableExamStructure, TableExam, TableAssign, TableHelloThai
+from .models import TableChapter, TableLevel, TableAnswer
+from .models import TableQuestion, TableExamStructure, TableExam, TableAssign
 # Register your models here.
-class TableClassAdmin(admin.ModelAdmin):
-    list_display = ['name']
-
-class TableStudentAdmin(admin.ModelAdmin):
-    list_display = ['mssv', 'ho_va_chu_lot', 'ten', 'lop_hoc']
 
 class AnswerInQuestion(admin.TabularInline):
     model = TableAnswer
@@ -18,13 +13,15 @@ class TableQuestionAdmin(admin.ModelAdmin):
     search_fields = ['question_text']
     inlines = [AnswerInQuestion]
 
-admin.site.register(TableClass, TableClassAdmin)
-admin.site.register(Student, TableStudentAdmin)
+class TableExamAdmin(admin.ModelAdmin):
+    list_display = ['ma_de', 'exam_structure', 'duration']
+    list_filter = ['ma_de']
+    search_fields = ['ma_de']
+    #inlines = [QuestionInExam]
+
 admin.site.register(TableChapter)
 admin.site.register(TableLevel)
-admin.site.register(TableAnswer)
 admin.site.register(TableQuestion, TableQuestionAdmin)
 admin.site.register(TableExamStructure)
-admin.site.register(TableExam)
+admin.site.register(TableExam, TableExamAdmin)
 admin.site.register(TableAssign)
-admin.site.register(TableHelloThai)

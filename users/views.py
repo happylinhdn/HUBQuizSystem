@@ -9,6 +9,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required
 from .forms import UpdateUserForm, UpdateProfileForm
 from .models import Profile
+from quizcore.models import TableAssign
 
 # Create your views here.
 def home(request):
@@ -81,6 +82,19 @@ def profile(request):
     user = request.user
     #profile = request.user.profile #Profile.objects.get_or_create(user=user)
     profile, created = Profile.objects.get_or_create(user=user)
+    assignments = TableAssign.objects.filter(student=user)
+    if len(assignments) > 0:
+        print('assignments', len(assignments))
+        for assignment in assignments:
+            print('exam', assignment.exam, assignment.student, assignment.exam.questions)
+            questions = assignment.exam.questions.all()
+            for question in questions:
+                print('question', question)
+
+
+
+    
+
     if request.method == 'POST':
         user_form = UpdateUserForm(request.POST, instance=user)
         profile_form = UpdateProfileForm(request.POST, request.FILES, instance=profile)
