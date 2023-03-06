@@ -1,17 +1,41 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
+from multiselectfield import MultiSelectField
+from django.utils.translation import gettext as _
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
 
 # Create your models here.
+class UserType(models.TextChoices):
+    Teacher = 'Teacher', _('Teacher')
+    Student = 'Student', _('Student')
+
 class TableClass(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.name
+        return self.name    
 
-class TableStudent(models.Model):
-    mssv = models.CharField(max_length=20)
-    ho_va_chu_lot = models.CharField(max_length=50)
-    ten = models.CharField(max_length=20)
-    lop_hoc = models.ForeignKey(TableClass, on_delete=models.CASCADE, related_name='lop_hoc')
+
+class Student(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    mssv = models.CharField(max_length=20, null=True)
+    ho_va_chu_lot = models.CharField(max_length=50, null=True)
+    ten = models.CharField(max_length=20, null=True)
+    lop_hoc = models.ForeignKey(TableClass, on_delete=models.CASCADE, related_name='lop_hoc', null=True)
+
+# @receiver(post_save, sender=User)
+# def create_user_student(sender, instance, created, **kwargs):
+#     if created:
+#         Student.objects.create(user=instance)
+
+# @receiver(post_save, sender=User)
+# def save_user_student(sender, instance, **kwargs):
+#     instance.Student.save()
 
 class TableChapter(models.Model):
     chapter_name = models.CharField(max_length=50)
@@ -38,11 +62,18 @@ class TableAnswer(models.Model):
     def __str__(self):
         return self.text
 
+MY_Chapter_example = (
+        ('a', 'Chap 1'),
+        ('b', 'Chap 2'),
+        ('c', 'Chap 3'),
+        ('d', 'Chap 4'),
+    )
+
 class TableExamStructure(models.Model):
     year = models.IntegerField()
-    chapters = models.ManyToManyField(TableChapter)
+    chapters = MultiSelectField(choices=MY_Chapter_example, max_length = 20, null=True)
     def __str__(self):
-        return self.year
+        return str(self.year)
 
 class TableExam(models.Model):
     ma_de = models.CharField(max_length=20)
@@ -52,7 +83,8 @@ class TableExam(models.Model):
 
 class TableAssign(models.Model):
     exam = models.ForeignKey(TableExam, on_delete=models.CASCADE, related_name='exams')
-    student = models.ForeignKey(TableStudent, on_delete=models.CASCADE, related_name='students')
+    #student = models.ForeignKey(TableStudent, on_delete=models.CASCADE, related_name='students')
+    student2 = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=10) # todo: let check what is status field ?
     current_answers = models.ManyToManyField(TableAnswer)
 

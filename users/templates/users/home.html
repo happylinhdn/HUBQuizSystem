@@ -1,0 +1,24 @@
+{% extends "users/base.html" %}
+{% block title %} Home Page {% endblock title%}
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">
+            Welcome!
+            {% if user.is_authenticated %}
+            <strong>{{ user.username }}</strong>
+            {% endif %}
+        </h1>
+        <p class="lead">
+            Đây là <b>Hệ thống Trắc Nghiệm online</b> của Bộ Môn Toán Kinh Tế.
+        </p>
+        <hr class="my-4">
+        <p class="lead">
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary btn-lg" href="{% url 'logout' %}" role="button">Đăng xuất</a>
+            {% else %}
+                <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Đăng Nhập</a>
+            {% endif %}
+        </p>
+    </div>
+
+{% endblock content %}

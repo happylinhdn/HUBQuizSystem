@@ -1,6 +1,5 @@
-import imp
 from django.contrib import admin
-from .models import TableClass, TableStudent, TableChapter, TableLevel, TableAnswer
+from .models import TableClass, Student, TableChapter, TableLevel, TableAnswer
 from .models import TableQuestion, TableExamStructure, TableExam, TableAssign, TableHelloThai
 # Register your models here.
 class TableClassAdmin(admin.ModelAdmin):
@@ -20,7 +19,7 @@ class TableQuestionAdmin(admin.ModelAdmin):
     inlines = [AnswerInQuestion]
 
 admin.site.register(TableClass, TableClassAdmin)
-admin.site.register(TableStudent, TableStudentAdmin)
+admin.site.register(Student, TableStudentAdmin)
 admin.site.register(TableChapter)
 admin.site.register(TableLevel)
 admin.site.register(TableAnswer)
