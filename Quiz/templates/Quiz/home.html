@@ -4,61 +4,35 @@
 {% block content %}
 {% load static %}
 <div class="container ">
-
-    <div class="row">
-        <div class="col">Mã Đề: <b>100</b></div>
-        <div class="col">Bắt đầu: <b>15h30</b></div>
-        <div class="col">Kết thúc: <b>17h30</b></div>
-        <div class="col" id="displaytimer"><b>Timer: 0 seconds</b></div>
-    </div>
-
-
- <form method='post' action=''>
-    {% csrf_token %}
-    {% for q  in questions%}
-    <div class="row">
-      <label for="question">Câu {{ forloop.counter }}: {{q.question}}</label>
-    </div>
-    <div class="row">
-        <div class="col form-check">
-            <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios1" value="A" checked>
-            <label class="form-check-label" for="gridRadios1"> A: {{q.op1}} </label>
+    {% if user.is_authenticated == False %}
+    <p class="lead"></p>
+        <div class="row"> Xin chào {{user}}, Vui lòng đăng nhập để xem bài thi </div>
+        <a class="btn btn-primary btn-lg" href="{% url 'quiz-login' %}" role="button">Đăng Nhập</a>
+    </p>
+    {% endif %}
+   
+    {% if user.is_authenticated %}
+    <div class="row"> Xin chào {{user}}, Dưới đây là danh sách các bài thi của bạn </div>
+    <p class="lead">
+        <div class="row">
+            {% for as  in assigment%}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">{{as.exam}}</h5>
+                  <p class="card-text">Trạng thái: {{as.status}}.</p>
+                  <p class="card-text">Số câu: {{as.exam.questions.all.count}}.</p>
+                  <p class="card-text">Thời gian: {{as.exam.duration}} phút.</p>
+                  <p class="card-text">Bắt đầu: {{as.time_start}} phút.</p>
+                  <a href="{% url 'do-assignment' as.id %}" class="btn btn-primary">
+                      {% if as.status == "Submitted" %} Xem điểm {% else %} Làm bài {% endif %}
+                    </a>
+                </div>
+              </div>
+              {% endfor %}
         </div>
-        <div class="col form-check">
-            <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios2" value="B">
-            <label class="form-check-label" for="gridRadios2"> B: {{q.op2}} </label>
-        </div>
-        <div class="col form-check">
-            <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios1" value="C">
-            <label class="form-check-label" for="gridRadios1"> C: {{q.op3}} </label>
-        </div>
-        <div class="col form-check">
-            <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios2" value="D">
-            <label class="form-check-label" for="gridRadios2"> D: {{q.op4}} </label>
-        </div>
-        <br>
-    </div>    
-    {% endfor %}
-    <input id='timer' type='hidden' name="timer" value="">
-    <br>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-    {% block script %}
-        <script>
+    </p>
 
-            console.log('hello world')
-            const timer=document.getElementById('displaytimer')
-            console.log(timer.textContent)
-            const inputtag = document.getElementById('timer')
-
-            t=0
-            setInterval(()=>{
-                t+=1
-                timer.innerHTML ="<b>Timer: " +t+" seconds</b>"
-                inputtag.value = t
-            },1000)
-        </script>
-    {% endblock script %}
+    {% endif %}
 
 </div>
 {% endblock %}
