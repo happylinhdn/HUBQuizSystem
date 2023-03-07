@@ -1,0 +1,65 @@
+
+{% extends 'Quiz/dependencies.html' %}
+
+{% block content %}
+{% load static %}
+<div class="container ">
+
+    <div class="row">
+        <div class="col">Mã Đề: <b>100</b></div>
+        <div class="col">Bắt đầu: <b>15h30</b></div>
+        <div class="col">Kết thúc: <b>17h30</b></div>
+        <div class="col" id="displaytimer"><b>Timer: 0 seconds</b></div>
+    </div>
+
+
+ <form method='post' action=''>
+    {% csrf_token %}
+    {% for q  in questions%}
+    <div class="row">
+      <label for="question">Câu {{ forloop.counter }}: {{q.question}}</label>
+    </div>
+    <div class="row">
+        <div class="col form-check">
+            <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios1" value="A" checked>
+            <label class="form-check-label" for="gridRadios1"> A: {{q.op1}} </label>
+        </div>
+        <div class="col form-check">
+            <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios2" value="B">
+            <label class="form-check-label" for="gridRadios2"> B: {{q.op2}} </label>
+        </div>
+        <div class="col form-check">
+            <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios1" value="C">
+            <label class="form-check-label" for="gridRadios1"> C: {{q.op3}} </label>
+        </div>
+        <div class="col form-check">
+            <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios2" value="D">
+            <label class="form-check-label" for="gridRadios2"> D: {{q.op4}} </label>
+        </div>
+        <br>
+    </div>    
+    {% endfor %}
+    <input id='timer' type='hidden' name="timer" value="">
+    <br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+    {% block script %}
+        <script>
+
+            console.log('hello world')
+            const timer=document.getElementById('displaytimer')
+            console.log(timer.textContent)
+            const inputtag = document.getElementById('timer')
+
+            t=0
+            setInterval(()=>{
+                t+=1
+                timer.innerHTML ="<b>Timer: " +t+" seconds</b>"
+                inputtag.value = t
+            },1000)
+        </script>
+    {% endblock script %}
+
+</div>
+{% endblock %}
+ 
