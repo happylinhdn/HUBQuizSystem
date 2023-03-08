@@ -1,0 +1,45 @@
+
+{% extends 'Quiz/dependencies.html' %}
+
+{% block content %}
+{% load static %}
+<div class="container ">
+    {% if user.is_authenticated %}
+    <div class="row"> Xin chào {{user}}, Mời chọn chức năng </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-4 col-lg-4 d-flex align-items-stretch">
+          <div class="card w-75">
+              <div class="card-header">Bài thi </div>
+              <div class="card-body">
+                <p class="card-text">Đã giao: 100. Đang làm: 50. Đã hoàn thành: 50.</p>
+              </div>
+
+              <div class="card-footer">
+                <a href="{% url 'quiz-assignment-season-list' %}" class="card-link">Xem</a>
+            </div>
+            
+          </div>
+          
+        </div>
+        <div class="col-sm-4 col-lg-4 d-flex align-items-stretch">
+          <div class="card w-75">
+            <div class="card-header">Đề mẫu</div>
+            <div class="card-body">
+                <p class="card-text">Số đề mẫu: 100.</p>
+                
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'quiz-sample-list' %}" class="card-link">Xem</a>
+            </div>
+
+          </div>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}
+ 

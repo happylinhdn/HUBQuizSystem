@@ -1,0 +1,24 @@
+
+{% extends 'Quiz/dependencies.html' %}
+
+{% block content %}
+{% load static %}
+<div class="container ">
+    {% if user.is_authenticated %}
+    <div class="row"> 
+      Cuộc thi {{Season.name}} - {{assignments.count}} sinh viên
+    </div>
+    <br>
+    {% for assignment in assignments %}
+      <div class="row">
+        <div class="col-sm-4">{{assignment.exam}}</div>
+        <div class="col-sm-4">{{assignment.user}}</div>
+        <div class="col-sm-4">{{assignment.status}}</div>
+      </div>
+    {% endfor %}
+
+    {% endif %}
+
+</div>
+{% endblock %}
+ 

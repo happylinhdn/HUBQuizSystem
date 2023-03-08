@@ -1,0 +1,42 @@
+
+{% extends 'Quiz/dependencies.html' %}
+
+{% block content %}
+{% load static %}
+<div class="container ">
+    {% if user.is_authenticated %}
+    <div class="row">
+      <a href="" class="card-link">Tạo đề mẫu</a>
+      <a href="" class="card-link">Thêm câu hỏi mẫu</a>
+      <a href="" class="card-link">Import câu hỏi mẫu</a>
+    </div>
+    {% if QuizSamples.count != 0 %}
+    {% endif %}
+    <div class="row">Danh sách các cấu trúc đề mẫu đã tạo </div>
+    <div class="row">
+
+      {% for QuizSample in QuizSamples %}
+        <div class="col-sm-4 col-lg-4 d-flex align-items-stretch">
+          <div class="card w-75">
+              <div class="card-body">
+                <p class="card-title">{{QuizSample.name_of_sample}}</p>
+                <a href="" class="card-link">Xem</a>
+              </div>
+          </div>
+          
+        </div>
+
+      {% endfor %}
+    </div>
+    <br>
+    
+    <br/>
+      {% if page_obj.has_next %}
+          <a href="/">Tiếp theo</a>
+      {% endif %}
+
+    {% endif %}
+
+</div>
+{% endblock %}
+ 

@@ -1,0 +1,13 @@
+
+{% extends 'Quiz/dependencies.html' %}
+
+{% block content %}
+{% load static %}
+<div class="container ">
+    <p class="lead"></p>
+        <div class="row"> Xin chào, Vui lòng đăng nhập để sử dụng hệ thống </div>
+        <a class="btn btn-primary btn-lg" href="{% url 'quiz-login' %}" role="button">Đăng Nhập</a>
+    </p>
+</div>
+{% endblock %}
+ 

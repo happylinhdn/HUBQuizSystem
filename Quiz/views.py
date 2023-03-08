@@ -1,4 +1,4 @@
-from django.shortcuts import redirect,render
+from django.shortcuts import redirect,render,get_object_or_404
 from django.contrib.auth import login,logout,authenticate
 from .forms import *
 from .models import *
@@ -11,14 +11,21 @@ from django.core.exceptions import BadRequest
 
 # Create your views here.
 def quizHome(request):
-    assignments = None
     if request.user.is_authenticated:
-        assignments = AssignmentModel.objects.filter(user = request.user)
-    context = {
-        'user':request.user,
-        'assigment':assignments
-    }
-    return render(request,'Quiz/home.html',context)
+        if request.user.is_staff:
+            context = {
+                'user':request.user
+            }
+            return render(request,'Quiz/teacher/teacher-home.html',context)
+        else:
+            assignments = AssignmentModel.objects.filter(user = request.user)
+            context = {
+                'user':request.user,
+                'assigment':assignments
+            }
+            return render(request,'Quiz/home.html',context)
+    else:
+        return render(request,'Quiz/home-empty-user.html')
 
 @login_required
 def doAssignment(request, pk):
@@ -133,3 +140,27 @@ def loginPage(request):
 def logoutPage(request):
     logout(request)
     return redirect('/')
+
+#Teacher views
+from django.views.generic import ListView, DetailView
+class AssignmentSeasonListView(ListView):
+    queryset = AssignmentSeason.objects.all()#.order_by('-date')
+    template_name = 'Quiz/teacher/teacher-assignment-season-list.html'
+    context_object_name = 'Seasons'
+    paginate_by = 8
+
+@login_required
+def assignmentSeasonDetailView(request, pk):
+    season = get_object_or_404(AssignmentSeason, pk=pk)
+    assignments = AssignmentModel.objects.filter(assignment_season=season)
+    context = {
+        "Season": season,
+        "assignments": assignments
+    }
+    return render(request, "Quiz/teacher/teacher-assignment-season-detail.html", context)
+
+class QuizSampleListView(ListView):
+    queryset = QuizSample.objects.all()#.order_by('-date')
+    template_name = 'Quiz/teacher/teacher-quiz-sample-list.html'
+    context_object_name = 'QuizSamples'
+    paginate_by = 8
