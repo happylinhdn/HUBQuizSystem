@@ -5,22 +5,29 @@
 {% load static %}
 <div class="container ">
     {% if user.is_authenticated %}
-    <div class="row"> Xin chào {{user}}, Danh sách các cuộc thi bạn đã tạo : </div>
+    <div class="row"> Danh sách đề thi </div>
     <br>
     <div class="row">
-
-      {% for season in Seasons %}
-        <div class="col-sm-4 col-lg-4 d-flex align-items-stretch">
-          <div class="card w-75">
-              <div class="card-body">
-                <p class="card-title">{{season.name}}</p>
-                <a href="{% url 'quiz-assignment-season-detail' season.id %}" class="card-link">Xem</a>
-              </div>
-          </div>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Kỳ thi</th>
+            <th scope="col">Chức năng</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for season in Seasons %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{season.name}}</td>
+            <td><a href="{% url 'quiz-assignment-season-detail' season.id %}" class="card-link">Xem</a></td>
+          </tr>
+          {% endfor %}
           
-        </div>
+        </tbody>
+      </table>
 
-      {% endfor %}
     </div>
     <br/>
       {% if page_obj.has_next %}

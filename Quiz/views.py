@@ -18,7 +18,8 @@ def quizHome(request):
             }
             return render(request,'Quiz/teacher/teacher-home.html',context)
         else:
-            assignments = AssignmentModel.objects.filter(user = request.user)
+            student, created = Profile.objects.get_or_create(user = request.user)
+            assignments = AssignmentRelated.objects.filter(student = student)
             context = {
                 'user':request.user,
                 'assigment':assignments
@@ -30,9 +31,11 @@ def quizHome(request):
 @login_required
 def doAssignment(request, pk):
     if request.method == 'POST':
-        assignment = AssignmentModel.objects.filter(id=pk)
-        if assignment and len(assignment) > 0:
-            questions = assignment[0].exam.questions.all()
+        assignment = AssignmentRelated.objects.get(id=pk)
+        if assignment:
+            exam = assignment.exam
+            examWithQuesRelateds = ExamWithQuesRelated.objects.filter(exam = exam)
+            questions = [rel.question for rel in examWithQuesRelateds]
             score = 0
             wrong = 0
             correct = 0
@@ -57,21 +60,22 @@ def doAssignment(request, pk):
                 'total':total
             }
 
-            assignment[0].status = 'Submitted'
-            assignment[0].wrong = wrong
-            assignment[0].correct = correct
-            assignment[0].answers = student_ans.dict()
-            assignment[0].save()
+            assignment.status = 'Submitted'
+            assignment.wrong = wrong
+            assignment.correct = correct
+            assignment.answers = student_ans.dict()
+            assignment.save()
             
             return render(request, 'Quiz/result.html', context)
         else:
             return bad_request(request, BadRequest("Invalid request; see documentation for correct paramaters"))
     else:
-        assignments = AssignmentModel.objects.filter(id=pk)
+        assignment = AssignmentRelated.objects.get(id=pk)
         questions = None
-        if assignments and len(assignments) > 0:
-            assignment = assignments[0]
-            questions = assignment.exam.questions.all()
+        if assignment:
+            exam = assignment.exam
+            examWithQuesRelateds = ExamWithQuesRelated.objects.filter(exam = exam)
+            questions = [rel.question for rel in examWithQuesRelateds]
             if assignment.status == 'Submitted':
                 wrong = assignment.wrong
                 correct = assignment.correct
@@ -152,7 +156,7 @@ class AssignmentSeasonListView(ListView):
 @login_required
 def assignmentSeasonDetailView(request, pk):
     season = get_object_or_404(AssignmentSeason, pk=pk)
-    assignments = AssignmentModel.objects.filter(assignment_season=season)
+    assignments = AssignmentRelated.objects.filter(season=season)
     context = {
         "Season": season,
         "assignments": assignments
@@ -160,7 +164,7 @@ def assignmentSeasonDetailView(request, pk):
     return render(request, "Quiz/teacher/teacher-assignment-season-detail.html", context)
 
 class QuizSampleListView(ListView):
-    queryset = QuizSample.objects.all()#.order_by('-date')
+    queryset = QuizStructureSampleModel.objects.all()#.order_by('-date')
     template_name = 'Quiz/teacher/teacher-quiz-sample-list.html'
     context_object_name = 'QuizSamples'
     paginate_by = 8

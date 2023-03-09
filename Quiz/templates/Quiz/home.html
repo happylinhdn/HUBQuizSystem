@@ -15,20 +15,37 @@
     <div class="row"> Xin chào {{user}}, Dưới đây là danh sách các bài thi của bạn </div>
     <p class="lead">
         <div class="row">
-            {% for as  in assigment%}
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                  <h5 class="card-title">{{as.exam}}</h5>
-                  <p class="card-text">Trạng thái: {{as.status}}.</p>
-                  <p class="card-text">Số câu: {{as.exam.questions.all.count}}.</p>
-                  <p class="card-text">Thời gian: {{as.exam.duration}} phút.</p>
-                  <p class="card-text">Bắt đầu: {{as.time_start}} phút.</p>
-                  <a href="{% url 'do-assignment' as.id %}" class="btn btn-primary">
-                      {% if as.status == "Submitted" %} Xem điểm {% else %} Làm bài {% endif %}
-                    </a>
-                </div>
-              </div>
-              {% endfor %}
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Đề thi</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Số câu</th>
+                    <th scope="col">Thời lượng</th>
+                    <th scope="col">Bắt đầu lúc</th>
+                    <th scope="col">Chức năng</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for as in assigment %}
+                  <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{as.exam}}</td>
+                    <td>{{as.status}}</td>
+                    <td>{{as.exam.question_number}}</td>
+                    <td>{{as.exam.duration}}</td>
+                    <td>{{as.time_start}}</td>
+
+                    <td><a href="{% url 'do-assignment' as.id %}" class="btn btn-primary">
+                        {% if as.status == "Submitted" %} Xem điểm {% else %} Làm bài {% endif %}
+                      </a></td>
+                  </tr>
+                  {% endfor %}
+                  
+                </tbody>
+              </table>
+
         </div>
     </p>
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
@@ -23,3 +24,24 @@ class Profile(models.Model):
             new_img = (100, 100)
             img.thumbnail(new_img)
             img.save(self.avatar.path)
+
+class CourseModel(models.Model):
+    """
+    Khóa học
+    """
+    name = models.CharField(max_length=50)
+    def __str__(self):
+        return self.name
+
+class CourseStudentModel(models.Model):
+    """
+    Khóa học vs Sinh Viên
+    """
+    course = models.ForeignKey(CourseModel, on_delete=models.CASCADE, related_name='course_student_course')
+    student_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='course_student_student_profle', null=True)
+
+    class Meta:
+        unique_together = ('course', 'student_profile')
+
+    def __str__(self):
+        return self.course.name + ' - ' + (self.student_profile and self.student_profile.user.username or 'No profile')

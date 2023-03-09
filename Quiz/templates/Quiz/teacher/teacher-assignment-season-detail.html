@@ -6,16 +6,34 @@
 <div class="container ">
     {% if user.is_authenticated %}
     <div class="row"> 
-      Cuộc thi {{Season.name}} - {{assignments.count}} sinh viên
+      Bài thi {{Season.name}}, {{assignments.count}} sinh viên tham gia
     </div>
     <br>
-    {% for assignment in assignments %}
-      <div class="row">
-        <div class="col-sm-4">{{assignment.exam}}</div>
-        <div class="col-sm-4">{{assignment.user}}</div>
-        <div class="col-sm-4">{{assignment.status}}</div>
-      </div>
-    {% endfor %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Đề</th>
+          <th scope="col">Sinh viên</th>
+          <th scope="col">Trạng thái</th>
+          <th scope="col">Câu đúng</th>
+          <th scope="col">Câu sai</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for assignment in assignments %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{assignment.exam}}</td>
+          <td>{{assignment.student}}</td>
+          <td>{{assignment.status}}</td>
+          <td>{{assignment.correct}}</td>
+          <td>{{assignment.wrong}}</td>
+        </tr>
+        {% endfor %}
+        
+      </tbody>
+    </table>
 
     {% endif %}
 

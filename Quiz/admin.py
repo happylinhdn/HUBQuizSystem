@@ -6,16 +6,16 @@ from .models import *
 class QuesModelAdmin(admin.ModelAdmin):
     list_display = ['id', 'question']
 
+class QuesInExam(admin.TabularInline):
+    model = ExamWithQuesRelated
+
 @admin.register(ExamModel)
 class ExamModelAdmin(admin.ModelAdmin):
     list_display = ['id', 'ma_de', 'duration']
-
-@admin.register(AssignmentModel)
-class AssignmentModelAdmin(admin.ModelAdmin):
-    list_display = ['id', 'assignment_season', 'exam', 'user', 'status', 'answers', 'time_start', 'time_end']
+    inlines = [QuesInExam]
 
 class AssignmentInSesionQuestion(admin.TabularInline):
-    model = AssignmentModel
+    model = AssignmentRelated
     #max_num = 4
 
 @admin.register(AssignmentSeason)
@@ -23,17 +23,30 @@ class AssignmentSeasonAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'assignment']
     inlines = [AssignmentInSesionQuestion]
     def assignment(self, season):
-        relatedAssignments = AssignmentModel.objects.filter(assignment_season = season)
+        relatedAssignments = AssignmentRelated.objects.filter(season = season)
         return relatedAssignments and len(relatedAssignments) or 0
-
-@admin.register(QuizMatrix)
-class QuizMatrixAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name_of_matrix']
-
-@admin.register(QuizSample)
-class QuizSampleAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name_of_sample']
 
 @admin.register(QuesSample)
 class QuesSampleAdmin(admin.ModelAdmin):
     list_display = ['id', 'question']
+
+class QuesSampleInQuesMatrix(admin.TabularInline):
+    model = QuesMatrixQuesSampleRelated
+    max_num = 4
+
+@admin.register(QuesMatrix)
+class QuesMatrixAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'number_question']
+    inlines = [QuesSampleInQuesMatrix]
+
+    def number_question(self, obj):
+        return len(QuesMatrixQuesSampleRelated.objects.filter(matrix=obj))
+
+class MatrixInStructure(admin.TabularInline):
+    model = QuizStructureWithQuesMatrixRelated
+
+@admin.register(QuizStructureSampleModel)
+class QuizStructureSampleModelAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+    inlines = [MatrixInStructure]
+
