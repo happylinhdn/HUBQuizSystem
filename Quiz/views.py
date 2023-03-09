@@ -168,3 +168,20 @@ class QuizSampleListView(ListView):
     template_name = 'Quiz/teacher/teacher-quiz-sample-list.html'
     context_object_name = 'QuizSamples'
     paginate_by = 8
+
+@login_required
+def addQuesMatrix(request):
+    context = None
+    if request.method == 'POST':
+        name = request.POST.get('nameMatrix')
+        quessamples= request.POST.getlist('quessamples')
+        print('name', name)
+        print('quessamples', quessamples)
+        #todo when submit
+        #return bad_request(request, BadRequest("Invalid request; see documentation for correct paramaters"))
+    else:
+        allQuesSamples = QuesSample.objects.all()
+        context = {
+            'questionSamples':allQuesSamples
+        }
+    return render(request, 'Quiz/teacher/add-ques-matrix.html', context)

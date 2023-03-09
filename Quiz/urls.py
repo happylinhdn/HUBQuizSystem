@@ -11,4 +11,5 @@ urlpatterns = [
     path('quiz-assignment-season-list', AssignmentSeasonListView.as_view(), name='quiz-assignment-season-list'),
     path('quiz-assignment-season-detail/<int:pk>', assignmentSeasonDetailView, name='quiz-assignment-season-detail'),
     path('quiz-sample-list', QuizSampleListView.as_view(), name='quiz-sample-list'),
+    path('add-ques-matrix', addQuesMatrix, name='add-question-matrix'),
 ]

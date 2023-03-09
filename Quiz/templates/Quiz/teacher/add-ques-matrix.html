@@ -1,0 +1,96 @@
+
+{% extends 'Quiz/dependencies.html' %}
+
+{% block content %}
+{% load static %}
+<div class="container ">
+
+    <div class="row">
+        <div class="col"><h5>Tạo ma trận đề</h5></div>
+    </div>
+    <br/>
+
+    <form method='POST' action=''>
+        {% csrf_token %}
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm" for="nameMatrix">Tên ma trận: </label>
+            <div class="col-sm-10">
+              <input required type="text" class="form-control" name="nameMatrix" id="nameMatrix" aria-describedby="nameHelp" placeholder="Nhập tên ma trận (Ex: nhóm câu 1)">
+              <small id="nameHelp" class="form-text text-muted">Tên gợi nhớ.</small>
+            </div>
+            
+          </div>
+        <div id="div-input-normal">
+            
+              <div class="form-group row">
+                  <label class="col-sm-2 col-form-label col-form-label-sm" for="quessamples">Chọn đề mẫu</label>
+                  <div class="col-sm-10">
+                      <select multiple class="form-control form-select" id="quessamples" name="quessamples" aria-describedby="nameHelp" required validate >
+                          {% for q  in questionSamples %}
+                          <option value="{{q.id}}">{{q.question}}</option>
+                          {% endfor %}
+                        </select>
+      
+                        <small id="nameHelp" class="form-text text-muted">Danh sách câu hỏi.</small>
+                  </div>
+                  
+                </div>
+        </div>
+        
+          <div class="form-group row">
+            <div class="col-sm-2">Checkbox</div>
+            <div class="col-sm-10">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="cbImportFile">
+                <label class="form-check-label" for="importFile">Import from file </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row" id="fileDiv">
+            <div class="col-sm-2">File</div>
+            <div class="col-sm-10">
+              <div class="form-check">
+                <input type="file" class="form-control-file" id="file">
+              </div>
+            </div>
+          </div>
+        <input type="submit" class="btn btn-success" value="Submit"/>
+      </form>
+
+      {% block script %}
+      <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+      <script>
+            $(function () {
+                $("#fileDiv").hide();
+                $("#div-input-normal").show();
+                $("#fileDiv").find('input').attr('required', false);
+                $("#div-input-normal").find('input').attr('required', true);
+                $("#quessamples").attr('required', true);
+
+                $("#cbImportFile").click(function () {
+                    if ($(this).is(":checked")) {
+                        $("#fileDiv").show();
+                        $("#div-input-normal").hide();
+                        $("#fileDiv").find('input').attr('required', true);
+                        $("#div-input-normal").find('input').attr('required', false);
+                        $("#quessamples").attr('required', false);
+                        
+                    } else {
+                        $("#fileDiv").hide();
+                        $("#div-input-normal").show();
+                        $("#fileDiv").find('input').attr('required', false);
+                        $("#div-input-normal").find('input').attr('required', true);
+                        $("#quessamples").attr('required', true);
+                    }
+                });
+            });
+            
+
+            
+        </script>
+    {% endblock script %}
+
+</div>
+{% endblock %}
+ 
