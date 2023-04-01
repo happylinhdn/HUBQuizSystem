@@ -14,11 +14,11 @@ class QuesModel(models.Model):
     ans = models.CharField(max_length=200, null=True)
     
     def __str__(self): 
-        return self.question
-        # if len(self.question) > 25:
-        #     return self.question[0:25]
-        # else:
-        #     return self.question
+        # return self.question
+        if len(self.question) > 25:
+            return self.question[0:25]
+        else:
+            return self.question
 
 class ExamModel(models.Model):
     """Đề thi"""
@@ -48,6 +48,7 @@ class AssignmentSeason(models.Model):
         return str(self.name)
 
 class AssignmentRelated(models.Model):
+    """Quan hệ Kì thi - Sinh viên - Thời gian - Câu trả lời của sv"""
     season = models.ForeignKey(AssignmentSeason, on_delete=models.CASCADE, null=True, blank=True)
     exam = models.ForeignKey(ExamModel, on_delete=models.CASCADE, related_name='exams') #De Thi
     student = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True) #Lớp, khóa học
@@ -60,7 +61,6 @@ class AssignmentRelated(models.Model):
     correct = models.IntegerField(default=-1, null=True, blank=True)
     class Meta:
         unique_together = ('season', 'student')
-
 
     def __str__(self):
         return self.season.name + ' - ' + self.exam.ma_de + ' - ' + (self.student and self.student.user.username or '')
